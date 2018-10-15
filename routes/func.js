@@ -1,8 +1,8 @@
 /*
  * @Author: cds.only 
  * @Date: 2018-10-14 23:32:53 
- * @Last Modified by: cds
- * @Last Modified time: 2018-10-15 17:36:22
+ * @Last Modified by: cds.only
+ * @Last Modified time: 2018-10-15 23:32:50
  */
 
 /**
@@ -15,65 +15,59 @@ const dataPath = path.resolve('./data/faces')
 
 
 //保存处理图片
-exports.saveAndDealFacePic = function (classNames) {
-    console.log(classNames);
-    const allFiles = fs.readdirSync(dataPath)
+exports.saveAndDealFacePic = function (classNames, fp) {
     const detector = fr.FaceDetector()
     const targetSize = 150
-    console.log(allFiles);
-    classNames.map(c =>
-        allFiles
-        .filter(f => f.includes(c))
-        .map(f => path.join(dataPath, f))
-        .map(function (fp) {
-            console.log(fp);
-            const image = fr.loadImage(fp);
-            const faceImages = detector.detectFaces(image, targetSize);
-            console.log(faceImages);
-            // faceImages.forEach((img, i) => fr.saveImage(img, `face_${i}.png`))
-            faceImages.forEach(function (img, i) {
-                // console.log(img);
-                fr.saveImage(`./data/comeFaces/face_${c}_${parseInt(Math.random()*1000000)}.png`, img);
+    const image = fr.loadImage(fp);
+    const faceImages = detector.detectFaces(image, targetSize);
+    faceImages.forEach(function (img, i) {
+        var randomNum = parseInt(Math.random() * 1000000);
+        if (classNames) {
+            fr.saveImage(`./data/dealFace/face_${classNames}_${randomNum}.png`, img);
+        } else {
+            fr.saveImage(`./data/dealFace/face_${randomNum}.png`, img);
+        }
 
-            })
-        })
-    )
+    })
+    return faceImages[0];
 };
 
 //训练识别器
-exports.trainFaceData = function () {
-
-    
-    const classNames = ['sheldon', 'lennard', 'raj', 'howard', 'stuart']
-
-    const allFiles = fs.readdirSync(dataPath)
-    const imagesByClass = classNames.map(c =>
-        allFiles
-        .filter(f => f.includes(c))
-        .map(f => path.join(dataPath, f))
-        .map(fp => fr.loadImage(fp))
-    )
-
-    const numTrainingFaces = 5
-    const trainDataByClass = imagesByClass.map(imgs => imgs.slice(0, numTrainingFaces))
-
+exports.trainFaceData = function (faces, name) {
+    console.log('faces')
+    console.log(faces);
     //训练识别器
 
-    const recognizer = fr.FaceRecognizer()
+    var recognizer = fr.FaceRecognizer();
 
-    trainDataByClass.forEach((faces, label) => {
-        // console.log(faces);
-        const name = classNames[label];
-        recognizer.addFaces(faces, name)
-    })
+    recognizer.addFaces(faces, name);
+
+    //加载识别器内容
+    // const modelState1 = JSON.parse(fs.readFileSync('./data/faceJson/model.json'));
+
+
+    var modelState2 = recognizer.serialize();
+    try {
+        const modelState1 = JSON.parse(fs.readFileSync('./data/faceJson/model.json'));
+        if (modelState1) {
+            modelState2 = modelState2.concat(modelState1);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
     //保存识别器内容
-    const modelState = recognizer.serialize()
-    // console.log(modelState);
-    fs.writeFileSync('./data/faceJson/model.json', JSON.stringify(modelState))
+
+    fs.writeFileSync('./data/faceJson/model.json', JSON.stringify(modelState2))
 };
 
 
 //识别人脸
-exports.predictBestFace=function(){
+exports.predictBestFace = function (face) {
+    const modelState = JSON.parse(fs.readFileSync('./data/faceJson/model.json'));
+    var recognizer = fr.FaceRecognizer();
+    recognizer.load(modelState);
+    const prediction = recognizer.predictBest(face)
+    console.log(prediction);
 
 };

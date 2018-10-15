@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-    <title> formdata file jquery ajax upload</title>
+    <title> 训练</title>
 </head>
 
 <body>
@@ -20,19 +20,50 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择:</label>
+        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择1:</label>
 
         <div class="col-sm-7">
-            <input type="file" name="fulAvatar" id="file_upload" value=""
+            <input type="file" name="fulAvatar1" id="file_upload1" value=""
                    class="form-control" placeholder="图片地址" >
         </div>
     </div>
     <div class="form-group">
-        <label for="url" class="col-sm-2 control-label"><s>*</s>电话:</label>
+        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择2:</label>
 
         <div class="col-sm-7">
-            <input type="number" name="phone"  value=""
-                   class="form-control" placeholder="电话号码">
+            <input type="file" name="fulAvatar2" id="file_upload2" value=""
+                   class="form-control" placeholder="图片地址" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择3:</label>
+
+        <div class="col-sm-7">
+            <input type="file" name="fulAvatar3" id="file_upload3" value=""
+                   class="form-control" placeholder="图片地址" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择4:</label>
+
+        <div class="col-sm-7">
+            <input type="file" name="fulAvatar4" id="file_upload3" value=""
+                   class="form-control" placeholder="图片地址" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-sm-2 control-label"><s>*</s>图片选择5:</label>
+
+        <div class="col-sm-7">
+            <input type="file" name="fulAvatar5" id="file_upload3" value=""
+                   class="form-control" placeholder="图片地址" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-sm-2 control-label"><s>*</s>姓名:</label>
+        <div class="col-sm-7">
+            <input type="text" name="name"  value="" id="name"
+                   class="form-control" placeholder="姓名">
         </div>
     </div>
     <div class="form-group">
@@ -45,6 +76,9 @@
 
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
+    $(function(){
+        $("#name").val(parseInt(Math.random()*1000000000000000000))
+    })
     /**
      * ajax 上传。
      */
@@ -66,11 +100,11 @@
              */
             contentType: false,
             success: function (responseStr) {
-                alert(responseStr.newPath);
-                $("img").attr({"src": responseStr.newPath}).prependTo($("body"));
+                // alert(responseStr.newPath);
+                // $("img").attr({"src": responseStr.newPath}).prependTo($("body"));
             },
             error: function (responseStr) {
-                alert(responseStr.newPath);
+                // alert(responseStr.newPath);
             }
         });
     }
