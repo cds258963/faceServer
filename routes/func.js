@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 23:32:53 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-15 15:34:50
+ * @Last Modified time: 2018-10-15 17:11:19
  */
 
 /**
@@ -11,18 +11,22 @@
 const path = require('path')
 const fs = require('fs')
 const fr = require('face-recognition')
+const dataPath = path.resolve('./data/faces')
 
 
 //保存处理图片
-exports.saveAndDealFacePic = function () {
-
+exports.saveAndDealFacePic = function (classNames) {
+    console.log(classNames);
+    const allFiles = fs.readdirSync(dataPath)
     const detector = fr.FaceDetector()
     const targetSize = 150
-    const imagesByClass = classNames.map(c =>
+    console.log(allFiles);
+    classNames.map(c =>
         allFiles
         .filter(f => f.includes(c))
         .map(f => path.join(dataPath, f))
         .map(function (fp) {
+            console.log(fp);
             const image = fr.loadImage(fp);
             const faceImages = detector.detectFaces(image, targetSize);
             console.log(faceImages);
@@ -39,7 +43,7 @@ exports.saveAndDealFacePic = function () {
 //训练识别器
 exports.trainFaceData = function () {
 
-    const dataPath = path.resolve('./data/comeFaces')
+    
     const classNames = ['sheldon', 'lennard', 'raj', 'howard', 'stuart']
 
     const allFiles = fs.readdirSync(dataPath)
