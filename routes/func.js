@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 23:32:53 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-15 17:22:38
+ * @Last Modified time: 2018-10-15 17:36:22
  */
 
 /**
@@ -71,6 +71,8 @@ exports.trainFaceData = function () {
     // console.log(modelState);
     fs.writeFileSync('./data/faceJson/model.json', JSON.stringify(modelState))
 };
+
+
 //识别人脸
 exports.predictBestFace=function(){
 
