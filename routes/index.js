@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 18:17:29 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-15 17:22:59
+ * @Last Modified time: 2018-10-15 17:31:28
  */
 var express = require('express');
 var router = express.Router();
@@ -60,7 +60,7 @@ router.post('/uploader', function (req, res,next) {
             res.render('index', { title: TITLE });
             return;
         }
-        var avatarName = fields.phone+'_'+Math.random() + '.' + extName;
+        var avatarName = fields.phone+'_'+parseInt(Math.random()*100000) + '.' + extName;
         //图片写入地址；
         var newPath = form.uploadDir + avatarName;
         //显示地址；
