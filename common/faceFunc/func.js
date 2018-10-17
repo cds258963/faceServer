@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 23:32:53 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-16 13:40:49
+ * @Last Modified time: 2018-10-17 16:08:02
  */
 
 /**
@@ -14,19 +14,11 @@ const fr = require('face-recognition');
 const dataPath = path.resolve('./data/faces');
 const Arr = require('../util/concatArr');
 
-
 //保存处理图片
 exports.saveAndDealFacePic = function (classNames, fp) {
     const detector = fr.FaceDetector();
     const targetSize = 150;
     const image = fr.loadImage(fp);
-    // if (!classNames) {
-    //     return {
-    //         status: 0,
-    //         msg: image
-    //     };
-    // } else {
-    // console.log(image);
     console.log(222);
     //识别人脸时的速度很慢
     const faceImages = detector.detectFaces(image, targetSize);
@@ -62,7 +54,7 @@ exports.trainFaceData = function (faces, name) {
     var recognizer = fr.FaceRecognizer();
     //抖动版本的数量
     const numJitters = 15
-    recognizer.addFaces(faces, name, numJitters);
+    recognizer.addFaces(faces, name);
 
     //加载识别器内容
 

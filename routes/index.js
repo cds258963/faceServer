@@ -2,10 +2,14 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 18:17:29 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-16 13:41:08
+ * @Last Modified time: 2018-10-17 17:21:15
  */
 var express = require('express');
 var router = express.Router();
+
+var Q = require('q');
+var defer = Q.defer();
+
 var formidable = require('formidable'),
     fs = require('fs'),
     TITLE = 'formidable上传示例',
@@ -13,6 +17,9 @@ var formidable = require('formidable'),
     domain = "http://localhost:3000";
 //引入处理模块
 var func = require('../common/faceFunc/func');
+//引入图片处理模块
+var gmCut = require('../common/util/gmCut');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {
@@ -21,89 +28,118 @@ router.get('/', function (req, res, next) {
 });
 
 
-//上传待识别图片
+//上传训练别图片
 router.post('/uploader', function (req, res, next) {
     // 添加响应头
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    var form = new formidable.IncomingForm(); //创建上传表单
-    form.encoding = 'utf-8'; //设置编辑
-    form.uploadDir = 'data' + AVATAR_UPLOAD_FOLDER; //设置上传目录
-    form.keepExtensions = true; //保留后缀
-    form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
-    form.parse(req, function (err, fields, files) {
+    // res.header("Access-Control-Allow-Origin", "*");
+    // res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // var form = new formidable.IncomingForm(); //创建上传表单
+    // form.encoding = 'utf-8'; //设置编辑
+    // form.uploadDir = 'data' + AVATAR_UPLOAD_FOLDER; //设置上传目录
+    // form.keepExtensions = true; //保留后缀
+    // form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
+    // form.parse(req, function (err, fields, files) {
 
-        if (err) {
-            res.locals.error = err;
+    //     if (err) {
+    //         res.locals.error = err;
+    //         res.send({
+    //             status: -1,
+    //             msg: '图片上传失败,请重试!'
+    //         });
+    //         return;
+    //     }
+    //     var classNames = fields.name;
+    //     var _id = fields._id
+    //     var response;
+    //     //循环上传的图片，进行处理并保存
+    //     var faceArr = [];
+    //     for (key in files) {
+    //         var extName = ''; //后缀名
+    //         switch (files[key].type) {
+    //             case 'image/pjpeg':
+    //                 extName = 'jpg';
+    //                 break;
+    //             case 'image/jpeg':
+    //                 extName = 'jpg';
+    //                 break;
+    //             case 'image/png':
+    //                 extName = 'png';
+    //                 break;
+    //             case 'image/x-png':
+    //                 extName = 'png';
+    //                 break;
+    //         }
+    //         if (extName.length == 0) {
+    //             res.locals.error = '只支持png和jpg格式图片';
+    //             res.send({
+    //                 status: -1,
+    //                 msg: '只支持png和jpg格式图片'
+    //             });
+    //             return;
+    //         }
+    //         var avatarName = fields.name + '_' + parseInt(Math.random() * 100000) + '.' + extName;
+    //         //图片写入地址；
+    //         var newPath = form.uploadDir + avatarName;
+    //         //显示地址；
+    //         var showUrl = domain + AVATAR_UPLOAD_FOLDER + avatarName;
+
+    //         fs.renameSync(files[key].path, newPath); //重命名
+    //         gmCut.cutfacePic(newPath, function (data) {
+
+    //         });
+    //         var imageStatus = func.saveAndDealFacePic(classNames, newPath);
+    //         if (imageStatus.status == 0) {
+    //             faceArr.concat(imageStatus.msg)
+    //         } else {
+    //             response = {
+    //                 status: -1,
+    //                 msg: `${key}训练图片中有未找到人脸的图片，请重新上传!`
+    //             };
+    //         }
+    //     }
+    //     //训练识别器(判断处理过后的训练图片张数；小于5张则不进行训练，提示重新提交)
+
+    //     if (faceArr.length < 5) {
+    //         response = {
+    //             status: -1,
+    //             msg: '训练图片中有未找到人脸的图片，请重新上传!'
+    //         };
+    //     } else {
+    //         //将获取到的人脸图片进行训练，生成训练模型并修改现有模型并保存
+    //         console.log(faceArr);
+    //         func.trainFaceData(faceArr, classNames);
+    //         response = {
+    //             status: 0,
+    //             msg: '训练成功!'
+    //         };
+    //     }
+    //     res.send(response);
+    // });
+
+    
+    upimg.upImg(req, function (data) {
+        console.log(data)
+        if (data.status == 0) {
+            
+        } else {
             res.send({
                 status: -1,
-                msg: '图片上传失败,请重试!'
-            });
-            return;
+                msg: data.msg
+            })
         }
-        var classNames = fields.name;
-        var _id = fields._id
-        //循环上传的图片，进行处理并保存
-        for (key in files) {
-            var extName = ''; //后缀名
-            switch (files[key].type) {
-                case 'image/pjpeg':
-                    extName = 'jpg';
-                    break;
-                case 'image/jpeg':
-                    extName = 'jpg';
-                    break;
-                case 'image/png':
-                    extName = 'png';
-                    break;
-                case 'image/x-png':
-                    extName = 'png';
-                    break;
-            }
-            if (extName.length == 0) {
-                res.locals.error = '只支持png和jpg格式图片';
-                res.send({
-                    status: -1,
-                    msg: '只支持png和jpg格式图片'
-                });
-                return;
-            }
-            var avatarName = fields.name + '_' + parseInt(Math.random() * 100000) + '.' + extName;
-            //图片写入地址；
-            var newPath = form.uploadDir + avatarName;
-            //显示地址；
-            var showUrl = domain + AVATAR_UPLOAD_FOLDER + avatarName;
+    })
 
-            fs.renameSync(files[key].path, newPath); //重命名
-            var imageStatus = func.saveAndDealFacePic(classNames, newPath);
-        }
-        //训练识别器(判断处理过后的训练图片张数；小于5张则不进行训练，提示重新提交)
-        var response;
-        if (imageStatus.msg < 5) {
-            response = {
-                status: -1,
-                msg: '训练图片中有未找到人脸的图片，请重新上传!'
-            };
-        } else {
-            //将获取到的人脸图片进行训练，生成训练模型并修改现有模型并保存
-            func.trainFaceData(imageStatus.msg, classNames);
-            response = {
-                status: 0,
-                msg: '训练成功!'
-            };
-        }
-        res.send(response);
-    });
+
 });
-
+//上传待识别图片
 router.post('/uploader1', function (req, res, next) {
     // 添加响应头
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header("Access-Control-Allow-Origin", "*");
+    // res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     var form = new formidable.IncomingForm(); //创建上传表单
     form.encoding = 'utf-8'; //设置编辑
     form.uploadDir = 'data' + AVATAR_UPLOAD_FOLDER; //设置上传目录
@@ -156,6 +192,8 @@ router.post('/uploader1', function (req, res, next) {
         var beforeFace = func.saveAndDealFacePic('', newPath);
         //训练识别器
         var response;
+        console.log(beforeFace)
+
         if (beforeFace.status == 0) {
             var afterFace = func.predictBestFace(beforeFace.msg);
             if (afterFace.status == 0) {
@@ -174,6 +212,27 @@ router.post('/uploader1', function (req, res, next) {
         res.send(response);
     });
 });
+
+
+var upimg = require('../common/util/upimg');
+
+
+
+router.post('/upimg', function (req, res, next) {
+    upimg.upImg(req, function (data) {
+        console.log(data)
+        if (data.status == 0) {
+
+        } else {
+            res.send({
+                status: -1,
+                msg: data.msg
+            })
+        }
+    })
+
+
+})
 
 /**
  * how to use face-recognition
