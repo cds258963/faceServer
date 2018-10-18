@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 18:17:29 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-17 17:28:35
+ * @Last Modified time: 2018-10-18 10:26:59
  */
 var express = require('express');
 var router = express.Router();
@@ -30,11 +30,6 @@ router.get('/', function (req, res, next) {
 
 //上传训练别图片
 router.post('/uploader', function (req, res, next) {
-    // 添加响应头
-    // res.header("Access-Control-Allow-Origin", "*");
-    // res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     var form = new formidable.IncomingForm(); //创建上传表单
     form.encoding = 'utf-8'; //设置编辑
     form.uploadDir = 'data' + AVATAR_UPLOAD_FOLDER; //设置上传目录
@@ -89,7 +84,8 @@ router.post('/uploader', function (req, res, next) {
     
             var imageStatus = func.saveAndDealFacePic(classNames, newPath);
             if (imageStatus.status == 0) {
-                faceArr.concat(imageStatus.msg)
+                var newArr=faceArr;
+                faceArr=faceArr.concat(imageStatus.msg)
             } else {
                 response = {
                     status: -1,
@@ -98,7 +94,6 @@ router.post('/uploader', function (req, res, next) {
             }
         }
         //训练识别器(判断处理过后的训练图片张数；小于5张则不进行训练，提示重新提交)
-
         if (faceArr.length < 5) {
             response = {
                 status: -1,
@@ -134,10 +129,6 @@ router.post('/uploader', function (req, res, next) {
 //上传待识别图片
 router.post('/uploader1', function (req, res, next) {
     // 添加响应头
-    // res.header("Access-Control-Allow-Origin", "*");
-    // res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     var form = new formidable.IncomingForm(); //创建上传表单
     form.encoding = 'utf-8'; //设置编辑
     form.uploadDir = 'data' + AVATAR_UPLOAD_FOLDER; //设置上传目录
@@ -228,8 +219,6 @@ router.post('/upimg', function (req, res, next) {
             })
         }
     })
-
-
 })
 
 /**
