@@ -9,9 +9,6 @@
         "": "node",
         "js": "node --harmony"
     },
-    "events": {
-        "restart": "console.log('重启') 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
-    },
     "watch": [
         "common/",
         "routes/"
