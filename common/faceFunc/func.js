@@ -2,7 +2,7 @@
  * @Author: cds.only 
  * @Date: 2018-10-14 23:32:53 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-18 16:50:12
+ * @Last Modified time: 2018-10-22 11:46:58
  */
 
 /**
@@ -19,19 +19,17 @@ exports.saveAndDealFacePic = function (classNames, fp) {
     const detector = fr.FaceDetector();
     const targetSize = 150;
     const image = fr.loadImage(fp);
-    console.log(222);
     //识别人脸时的速度很慢 如果传入如果传入尺寸为150的图片 处理速度很快
     const faceImages = detector.detectFaces(image, targetSize);
-    console.log(333);
     if (faceImages.length > 0) {
-        // faceImages.forEach(function (img, i) {
-        //     var randomNum = parseInt(Math.random() * 1000000);
-        //     if (classNames) {
-        //         fr.saveImage(`./data/dealFace/face_${classNames}_${randomNum}.png`, img);
-        //     } else {
-        //         fr.saveImage(`./data/dealFace/face_${randomNum}.png`, img);
-        //     }
-        // }) 
+        faceImages.forEach(function (img, i) {
+            var randomNum = parseInt(Math.random() * 1000000);
+            if (classNames) {
+                fr.saveImage(`./data/dealFace/face_${classNames}_${randomNum}.png`, img);
+            } else {
+                fr.saveImage(`./data/dealFace/face_${randomNum}.png`, img);
+            }
+        }) 
         return {
             status: 0,
             msg: faceImages

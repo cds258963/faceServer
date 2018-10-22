@@ -2,7 +2,7 @@
  * @Author: cds 
  * @Date: 2018-10-17 16:16:44 
  * @Last Modified by: cds
- * @Last Modified time: 2018-10-17 16:46:05
+ * @Last Modified time: 2018-10-22 10:53:40
  */
 
 /**
@@ -72,9 +72,9 @@ exports.upImg = function (req, callback) {
             
             fs.renameSync(files[key].path, newPath); //重命名
             
-            var jsonPath = {}
-            jsonPath[key] = newPath;
-            imgPathArr.push(jsonPath);
+            // var jsonPath = {}
+            // jsonPath[key] = newPath;
+            imgPathArr.push(newPath);
 
         }
         for (key in fields) {

@@ -9,7 +9,7 @@
     <img id="showImg" src="" alt="">
 
     <form role="form" id="myForm" action="#" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="_id" id="_id">
+        <!-- <input type="hidden" name="_id" id="_id"> -->
         <div class="form-group">
             <label class="col-sm-2 control-label">说明:</label>
 
@@ -90,7 +90,7 @@
         <div class="form-group">
             <label for="url" class="col-sm-2 control-label "><s>*</s>姓名:</label>
             <div class="col-sm-7">
-                <input type="text" name="name" value="" id="name" class="form-control file" placeholder="姓名">
+                <input type="text" name="classNames" value="" id="classNames" class="form-control file" placeholder="姓名">
             </div>
         </div>
 
@@ -104,7 +104,7 @@
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            $("#_id").val(genID(24))
+            // $("#_id").val(genID(24))
         })
         function genID(length) {
             return Number(Math.random().toString().substr(3, length) + Date.now()).toString(36);
@@ -115,8 +115,8 @@
         function uploadByForm() {
             //用form 表单直接 构造formData 对象; 就不需要下面的append 方法来为表单进行赋值了。
             var formData = new FormData($("#myForm")[0]);
-            var url = "http://localhost:3000/uploader";
-            // var url = "http://localhost:3000/upimg";
+            // var url = "http://localhost:3000/uploader";
+            var url = "http://localhost:3000/upImgToTrain";
             $.ajax({
                 url: url,
                 type: 'POST',
