@@ -12,7 +12,7 @@ var defer = Q.defer();
 
 var formidable = require('formidable'),
     fs = require('fs'),
-    TITLE = 'formidable上传示例',
+    TITLE = 'formidable上传示例',   
     AVATAR_UPLOAD_FOLDER = '/faces/',
     domain = "http://localhost:3000";
 //引入处理模块
